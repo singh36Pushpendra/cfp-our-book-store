@@ -2,7 +2,7 @@ package com.store.books.service;
 
 import com.store.books.dto.LoginDTO;
 import com.store.books.dto.UserDTO;
-import com.store.books.exception.UserException;
+import com.store.books.exception.BookStoreException;
 import com.store.books.model.User;
 import com.store.books.repository.IUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class UserServiceImpl implements IUserService {
         if (optionalUser.isPresent())
             return optionalUser.get();
 
-        throw new UserException("Invalid: User id: '" + id + "' does'nt exists in repo!");
+        throw new BookStoreException("Invalid: User id: '" + id + "' does'nt exists in repo!");
     }
 
     @Override
@@ -47,7 +47,7 @@ public class UserServiceImpl implements IUserService {
     public User getUser(String email) {
         User user = userRepo.findUserByEmail(email);
         if (user == null)
-            throw new UserException("Invalid: User email: '" + email + "' does'nt exists! in repo!");
+            throw new BookStoreException("Invalid: User email: '" + email + "' does'nt exists! in repo!");
         return user;
     }
 
@@ -56,7 +56,7 @@ public class UserServiceImpl implements IUserService {
     public User updateUser(String email, UserDTO userDTO) {
         User userByEmail = userRepo.findUserByEmail(email);
         if (userByEmail == null)
-            throw new UserException("Can't Update: Either invalid user email or email: '" + email + "' does'nt exists! in repo!");
+            throw new BookStoreException("Can't Update: Either invalid user email or email: '" + email + "' does'nt exists! in repo!");
         User user = new User(userDTO);
         user.setId(userByEmail.getId());
         return userRepo.save(user);
@@ -73,7 +73,7 @@ public class UserServiceImpl implements IUserService {
             user.setId(id);
             return userRepo.save(user);
         }
-        throw new UserException("Can't Update: User id is not present in repo!");
+        throw new BookStoreException("Can't Update: User id is not present in repo!");
     }
 
     @Override
@@ -81,7 +81,7 @@ public class UserServiceImpl implements IUserService {
     public User checkLogin(LoginDTO loginDTO) {
         User user = userRepo.findByLoginDetails(loginDTO.email, loginDTO.password);
         if (user == null)
-            throw new UserException("Incorrect user or password login!");
+            throw new BookStoreException("Incorrect user or password login!");
         return user;
     }
 
@@ -98,12 +98,12 @@ public class UserServiceImpl implements IUserService {
     public User resetPassword(String email, String newPassword, String confirmPassword) {
         User user = getUser(email);
         if (user == null)
-            throw new UserException("Email '" + user.getEmail() + "' does'nt exists in repository!");
+            throw new BookStoreException("Email '" + user.getEmail() + "' does'nt exists in repository!");
         if (newPassword.equals(confirmPassword)) {
             user.setPassword(confirmPassword);
             return userRepo.save(user);
         }
-        throw new UserException("New Password & Confirm Password does'nt matches!");
+        throw new BookStoreException("New Password & Confirm Password does'nt matches!");
     }
 
 }

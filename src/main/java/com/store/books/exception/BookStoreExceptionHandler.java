@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 // Allows us to print message over console.
 @Slf4j
-public class UserExceptionHandler {
+public class BookStoreExceptionHandler {
 
     // Declaring a constant message.
     private static final String MSG = "Exception while processing rest request!";
@@ -25,7 +25,7 @@ public class UserExceptionHandler {
     // Handling exception for invalid method arguments.
     // Used to handle exception and to send custom response to client.
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ResponseDTO> handleMethodArgNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ResponseDTO> handlePredefinedException(MethodArgumentNotValidException exception) {
         // Getting all errors in a list of ObjectError.
         List<ObjectError> allErrors = exception.getBindingResult().getAllErrors();
 
@@ -34,23 +34,25 @@ public class UserExceptionHandler {
         List<String> errMsg = allErrors.stream()
                 .map(objErr -> objErr.getDefaultMessage()).collect(Collectors.toList());
 
-        ResponseDTO responseDTO = new ResponseDTO(MSG, errMsg, null);
+        ResponseDTO responseDTO = new ResponseDTO(MSG, errMsg);
         return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
     }
 
     // Handling custom exception.
-    @ExceptionHandler(UserException.class)
-    public ResponseEntity<ResponseDTO> handleUserException(UserException exception) {
-        ResponseDTO responseDTO = new ResponseDTO(MSG, exception.getMessage(), null);
+    @ExceptionHandler(BookStoreException.class)
+    public ResponseEntity<ResponseDTO> handleCustomException(BookStoreException exception) {
+
+        ResponseDTO responseDTO = new ResponseDTO(MSG, exception.getMessage());
         return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
     }
 
     // Handling exception for incorrect date format.
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ResponseDTO> handleHttpMsgNotReadableException(HttpMessageNotReadableException exception) {
+    public ResponseEntity<ResponseDTO> handlePredefinedException(HttpMessageNotReadableException exception) {
         log.error("Invalid Date Format!", exception);
 
-        ResponseDTO responseDto = new ResponseDTO(MSG, "Should have date in the format 'yyyy-mm-dd'!", null);
+        ResponseDTO responseDto = new ResponseDTO(MSG, "Should have date in the format 'yyyy-mm-dd'!");
         return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
     }
+
 }

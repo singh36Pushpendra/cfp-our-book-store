@@ -40,7 +40,6 @@ public class UserController {
         Email email = new Email(user.getEmail(), "Created New Account!", "Congratulations " + user.getFirstName() + "" +
                 ", You are registered successfully on OurBookStore!");
 
-        emailService.sendMail(email);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
@@ -81,7 +80,7 @@ public class UserController {
 
         emailService.sendMail(emailObject);
 
-        ResponseDTO responseDTO = new ResponseDTO("Your profile has been Updated Successfully!", user, userToken.createToken(user.getId()));
+        ResponseDTO responseDTO = new ResponseDTO("Your profile has been Updated Successfully!", user, null);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
