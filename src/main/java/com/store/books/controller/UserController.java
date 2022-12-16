@@ -32,8 +32,8 @@ public class UserController {
 
     // API to register new user account.
     // Used to map HTTP post request to this handler method.
-    @PostMapping("/register")
-    public ResponseEntity<ResponseDTO> register(@Valid @RequestBody UserDTO userDTO) {
+    @PostMapping("/post")
+    public ResponseEntity<ResponseDTO> postUser(@Valid @RequestBody UserDTO userDTO) {
         User user = service.addUser(userDTO);
         ResponseDTO responseDTO = new ResponseDTO("You are Registered Successfully!", user, userToken.createToken(user.getId()));
 
@@ -100,7 +100,7 @@ public class UserController {
 
     // API to login user.
     @PostMapping("/login")
-    public ResponseEntity <ResponseDTO> login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity <ResponseDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
         User user = service.checkLogin(loginDTO);
         ResponseDTO responseDTO = new ResponseDTO("Welcome " + user.getFirstName() + "! You are Successfully Logged In!", user, null);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
@@ -108,10 +108,10 @@ public class UserController {
 
     // API to change user account password.
     @PutMapping("/changepwd")
-    public ResponseEntity<ResponseDTO> changePassword(@RequestBody LoginDTO loginDTO, @RequestParam String newPassword) {
+    public ResponseEntity<ResponseDTO> changePassword(@Valid @RequestBody LoginDTO loginDTO, @RequestHeader String newPassword) {
         User user = service.updatePassword(loginDTO, newPassword);
 
-        ResponseDTO responseDTO = new ResponseDTO("Password got changed successfully!", user, null);
+        ResponseDTO responseDTO = new ResponseDTO("Password got changed successfully!", user);
         Email email = new Email(user.getEmail(), "Password Changed!", "Hello " + user.getFirstName() + "" +
                 " Your 'OurBookStore' account password changed successfully!");
         emailService.sendMail(email);
@@ -122,11 +122,11 @@ public class UserController {
     // API to reset password.
     @PutMapping("/forgotpwd/{email}")
     public ResponseEntity<ResponseDTO> forgotPassword(
-            @PathVariable String email, @RequestParam String newPassword,
-            @RequestParam String confirmPassword
+            @PathVariable String email, @RequestHeader String newPassword,
+            @RequestHeader String confirmPassword
     ) {
         User user = service.resetPassword(email, newPassword, confirmPassword);
-        ResponseDTO responseDTO = new ResponseDTO("Your password got reset successfully!", user, null);
+        ResponseDTO responseDTO = new ResponseDTO("Your password got reset successfully!", user);
 
         Email emailObject = new Email(user.getEmail(), "Password Reset!", "Hello " + user.getFirstName() + "" +
                 " Your 'OurBookStore' account password reset successfully!");

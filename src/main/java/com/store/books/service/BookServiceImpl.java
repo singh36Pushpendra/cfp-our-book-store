@@ -31,7 +31,7 @@ public class BookServiceImpl implements IBookService {
         Optional<Book> optionalBook = bookRepo.findById(id);
         if (optionalBook.isPresent())
             return optionalBook.get();
-        throw new BookStoreException("Id = '" + id + "' not exists in repository!");
+        throw new BookStoreException("Book Id = '" + id + "' not exists in repository!");
     }
 
     // Update a book by id.
@@ -43,7 +43,7 @@ public class BookServiceImpl implements IBookService {
             book.setId(id);
             return bookRepo.save(book);
         }
-        throw new BookStoreException("Can't Update: Id = '" + id + "' not exists in repository!");
+        throw new BookStoreException("Can't Update: Book Id = '" + id + "' not exists in repository!");
     }
 
     // Delete a book by id.
@@ -53,7 +53,7 @@ public class BookServiceImpl implements IBookService {
             bookRepo.deleteById(id);
             return "Book deleted successfully!";
         }
-        throw new BookStoreException("Can't Delete: Id = '" + id + "' not exists in repository!");
+        throw new BookStoreException("Can't Delete: Book Id = '" + id + "' not exists in repository!");
     }
 
     // Get all books present in repository.
@@ -71,16 +71,21 @@ public class BookServiceImpl implements IBookService {
         throw new BookStoreException("No book exist with name: '" + name + "' in repository!");
     }
 
+    // Overloaded method.
     // Update book quantity by its id.
     @Override
     public Book updateBook(int id, int quantity) {
+        // Check quantity value.
+        if (quantity < 200 || quantity > 1000)
+            throw new BookStoreException("Can't Update: Book quantity should be from 200 to 1000 only!");
+
         Optional<Book> optionalBook = bookRepo.findById(id);
         if (optionalBook.isPresent()) {
             Book book = optionalBook.get();
             book.setQuantity(quantity);
             return bookRepo.save(book);
         }
-        throw new BookStoreException("Can't Update: Id = '" + id + "' not exists in repository!");
+        throw new BookStoreException("Can't Update: Book Id = '" + id + "' not exists in repository!");
     }
 
     // Get all books in ascending order by book price.

@@ -5,12 +5,9 @@ import com.store.books.dto.ResponseDTO;
 import com.store.books.model.Book;
 import com.store.books.service.IBookService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +16,6 @@ import java.util.List;
 @RestController
 // Allows us to map web requests to this handler class.
 @RequestMapping("/ourbookstore/book")
-// Enable validation for both request parameters and path variables.
-@Validated
 public class BookController {
 
     @Autowired
@@ -47,7 +42,7 @@ public class BookController {
 
     // API to update a book details by its id.
     @PutMapping("/put/{id}")
-    public ResponseEntity<ResponseDTO> putBook(@PathVariable int id, @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<ResponseDTO> putBook(@PathVariable int id, @Valid @RequestBody BookDTO bookDTO) {
         Book book = bookService.updateBook(id, bookDTO);
         ResponseDTO responseDTO = new ResponseDTO("Book details are updated successfully!", book);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
@@ -55,10 +50,9 @@ public class BookController {
 
     // API to delete a book details by its id.
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ResponseDTO> deleteBook(@PathVariable int id) {
+    public ResponseEntity<String> deleteBook(@PathVariable int id) {
         String deleteMsg = bookService.deleteBook(id);
-        ResponseDTO responseDTO = new ResponseDTO("Book details are as follows: ", deleteMsg);
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        return new ResponseEntity<>(deleteMsg, HttpStatus.OK);
     }
 
     // API to get all book details.
@@ -79,7 +73,7 @@ public class BookController {
 
     // API to update book quantity.
     @PutMapping("/update/{quantity}")
-    public ResponseEntity<ResponseDTO> updateBookQuantity(@RequestParam int id, @PathVariable @Min(200) @Max(1000) int quantity) {
+    public ResponseEntity<ResponseDTO> updateBookQuantity(@RequestParam int id, @PathVariable int quantity) {
         Book book = bookService.updateBook(id, quantity);
         ResponseDTO responseDTO = new ResponseDTO("Book quantity updated successfully!", book);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
@@ -100,4 +94,5 @@ public class BookController {
         ResponseDTO responseDTO = new ResponseDTO("Book details in descending order are as follows: ", books);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
+
 }

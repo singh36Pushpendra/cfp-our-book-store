@@ -56,7 +56,7 @@ public class UserServiceImpl implements IUserService {
     public User updateUser(String email, UserDTO userDTO) {
         User userByEmail = userRepo.findUserByEmail(email);
         if (userByEmail == null)
-            throw new BookStoreException("Can't Update: Either invalid user email or email: '" + email + "' does'nt exists! in repo!");
+            throw new BookStoreException("Can't Update: User email: '" + email + "' does'nt exists! in repo!");
         User user = new User(userDTO);
         user.setId(userByEmail.getId());
         return userRepo.save(user);
@@ -98,7 +98,7 @@ public class UserServiceImpl implements IUserService {
     public User resetPassword(String email, String newPassword, String confirmPassword) {
         User user = getUser(email);
         if (user == null)
-            throw new BookStoreException("Email '" + user.getEmail() + "' does'nt exists in repository!");
+            throw new BookStoreException("User email = '" + user.getEmail() + "' does'nt exists in repository!");
         if (newPassword.equals(confirmPassword)) {
             user.setPassword(confirmPassword);
             return userRepo.save(user);

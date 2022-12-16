@@ -24,7 +24,7 @@ public class BookDTO {
     public float price;
 
     // Define min and max allowed values for book quantity.
-    @Min(value = 200, message = "Book quantity should be atleast 200 !")
-    @Max(value = 1000, message = "Book quantity can be atmost 1000 !")
+    @Min(value = 2, message = "Book quantity should be atleast 2 !")
+    @Max(value = 20, message = "Book quantity can be atmost 20 !")
     public int quantity;
 }
