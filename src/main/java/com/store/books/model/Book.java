@@ -15,7 +15,7 @@ import lombok.Setter;
 @Entity
 // Generate zeroth args constructor.
 @NoArgsConstructor
-public class Book implements Comparable<Book> {
+public class Book {
 
     // Define 'id' variable as primary key.
     @Id
@@ -37,19 +37,4 @@ public class Book implements Comparable<Book> {
         quantity = bookDTO.quantity;
     }
 
-    // Overriding compareTo() method of Comparable interface.
-    // Provide default sorting order as ascending order by book price.
-    @Override
-    public int compareTo(Book book) {
-        // Autoboxing float to Float.
-        Float price1 = this.price;
-        Float price2 = book.price;
-
-        if (price1.compareTo(price2) > 0)
-            return 1;
-        else if (price1.compareTo(price2) < 0)
-            return -1;
-        else
-            return 0;
-    }
 }

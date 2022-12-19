@@ -5,6 +5,7 @@ import com.store.books.exception.BookStoreException;
 import com.store.books.model.Book;
 import com.store.books.repository.IBookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -91,16 +92,12 @@ public class BookServiceImpl implements IBookService {
     // Get all books in ascending order by book price.
     @Override
     public List<Book> getAllInAscOrder() {
-        List<Book> allBook = getAllBook();
-        // Returning sorted list in ascending order using Stream API.
-        return allBook.stream().sorted().collect(Collectors.toList());
+        return bookRepo.findAll(Sort.by("price"));
     }
 
     // Get all books in descending order by book price.
     @Override
     public List<Book> getAllInDescOrder() {
-        List<Book> allBook = getAllBook();
-        // Returning sorted list in descending order using Stream API.
-        return allBook.stream().sorted((book1, book2) -> -book1.compareTo(book2)).collect(Collectors.toList());
+        return bookRepo.findAll(Sort.by("price").descending());
     }
 }
