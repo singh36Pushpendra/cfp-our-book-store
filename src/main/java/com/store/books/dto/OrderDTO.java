@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
+// Generate all args constructor using lombok lib.
 @AllArgsConstructor
 public class OrderDTO {
 
@@ -14,13 +15,12 @@ public class OrderDTO {
     @Max(value = 10, message = "Order quantity should not be greater than 10!")
     public int quantity;
 
+    // Validate not null constraint.
     @NotNull(message = "Address can't be empty!")
     public String address;
 
+    // Validate constraint for +ve number.
     @Positive(message = "Id value should be atleast '1' or more!")
     public int userId, bookId;
-
-    @NotNull(message = "Cancel value can't be empty!")
-    public boolean cancel;
 
 }

@@ -24,6 +24,10 @@ public interface IOrderService {
     // Declare to delete order by id.
     void deleteOrder(int id);
 
+    // Declare to cancel order.
+    Order cancelOrder(int id);
+
     // Declare to get all order information.
     List<Order> getAllOrder();
+
 }

@@ -73,6 +73,16 @@ public class OrderController {
         return new ResponseEntity<>("Order deleted successfully!", HttpStatus.OK);
     }
 
+    // API to cancel order by id.
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<ResponseDTO> cancelOrder(@PathVariable int id) {
+        order = orderService.cancelOrder(id);
+        email = new Email(order.getUser().getEmail(), "Canclled order from OurBookStore!", "Order of book " + order.getBook().getName() + " cancelled successfully!");
+        emailService.sendMail(email);
+        responseDTO = new ResponseDTO("Order cancelled successfully!", order);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
     // API to get all orders.
     @GetMapping("/getall")
     public ResponseEntity<ResponseDTO> getAllOrder() {

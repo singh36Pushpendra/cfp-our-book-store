@@ -42,10 +42,9 @@ public class OrderServiceImpl implements IOrderService {
         if (quantity < book.getQuantity()) {
             user = userService.getUser(orderDTO.userId);
             String address = orderDTO.address;
-            boolean cancel = orderDTO.cancel;
 
             float totalPrice = book.getPrice() * quantity;
-            return new Order(user, book, quantity, address, totalPrice, cancel);
+            return new Order(user, book, quantity, address, totalPrice);
         }
         throw new BookStoreException("Can't Place Order: No sufficient book quantity available!");
     }
@@ -62,7 +61,7 @@ public class OrderServiceImpl implements IOrderService {
     public Order insertOrder(OrderByCartDTO orderByCartDTO) {
         Cart cart = cartService.selectCart(orderByCartDTO.cartId);
         OrderDTO orderDTO = new OrderDTO(orderByCartDTO.quantity, orderByCartDTO.address,
-                cart.getUser().getId(), cart.getBook().getId(), orderByCartDTO.cancel);
+                cart.getUser().getId(), cart.getBook().getId());
 
         return insertOrder(orderDTO);
     }
@@ -80,13 +79,20 @@ public class OrderServiceImpl implements IOrderService {
         selectOrder(id);
         order = getOrderObject(orderDTO);
         order.setId(id);
-        return order;
+        return orderRepo.save(order);
     }
 
     // Deletes an order by id.
     @Override
     public void deleteOrder(int id) {
         orderRepo.delete(selectOrder(id));
+    }
+
+    @Override
+    public Order cancelOrder(int id) {
+        order = selectOrder(id);
+        order.setCancel(true);
+        return orderRepo.save(order);
     }
 
     // Get all order from repository.
